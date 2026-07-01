@@ -1,130 +1,137 @@
 // =========================================
 // NUR Test Engine
 // result.js
-// Версия 1.0
+// UI Version 2
 // =========================================
 
-// =========================================
-// Экран результата
-// =========================================
-
-function showResult(){
+function showResult() {
 
     const result = getResult();
 
-    app.innerHTML = "";
+    let html = `
 
-    // -------------------------
+        <div class="result-card fade">
 
-    const title = document.createElement("h1");
+            <div class="result-icon">
 
-    title.innerHTML = "Результат";
+                🏆
 
-    app.appendChild(title);
+            </div>
 
-    // -------------------------
+            <h1>
 
-    const score = document.createElement("h2");
+                Тест завершён
 
-    score.innerHTML =
+            </h1>
 
-        result.score +
+            <div class="result-score">
 
-        " / " +
+                ${result.score} / ${result.total}
 
-        result.total +
+            </div>
 
-        " (" +
+            <div class="result-percent">
 
-        result.percent +
+                ${result.percent}%
 
-        "%)";
+            </div>
 
-    app.appendChild(score);
+    `;
 
-    // -------------------------
+    if (result.errors.length === 0) {
 
-    if(result.errors.length===0){
+        html += `
 
-        const ok=document.createElement("h3");
+            <p class="mt-20">
 
-        ok.className="good";
+                🎉 Поздравляем! Все ответы правильные.
 
-        ok.innerHTML="🎉 Без ошибок!";
+            </p>
 
-        app.appendChild(ok);
+        `;
 
-    }
-    else{
+    } else {
 
-        const titleErrors=document.createElement("h3");
+        html += `
 
-        titleErrors.innerHTML="Ошибки";
+            <div class="card mt-30">
 
-        app.appendChild(titleErrors);
+                <h2>
 
-        result.errors.forEach(error=>{
+                    Ошибки
 
-            const block=document.createElement("div");
+                </h2>
 
-            block.className="o";
+        `;
 
-            block.style.marginBottom="15px";
+        result.errors.forEach(error => {
 
-            block.innerHTML=
+            html += `
 
-            "<b>"+error.question+"</b><br><br>"+
+                <div class="chapter-card">
 
-            "Ваш ответ:<br>"+
+                    <div>
 
-            "<span style='color:red'>"+
+                        <div style="font-weight:700;margin-bottom:12px;">
 
-            error.user+
+                            ${error.question}
 
-            "</span><br><br>"+
+                        </div>
 
-            "Правильный ответ:<br>"+
+                        <div style="color:#DC2626;margin-bottom:8px;">
 
-            "<span style='color:green'>"+
+                            ❌ ${error.user}
 
-            error.correct+
+                        </div>
 
-            "</span>";
+                        <div style="color:#16A34A;">
 
-            app.appendChild(block);
+                            ✅ ${error.correct}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
 
         });
 
+        html += `
+
+            </div>
+
+        `;
+
     }
 
-    // -------------------------
+    html += `
 
-    const again=document.createElement("button");
+        <div class="button-group">
 
-    again.innerHTML="Пройти ещё раз";
+            <button
+                class="primary-btn"
+                onclick="showStart()">
 
-    again.onclick=function(){
+                Пройти ещё раз
 
-        showStart();
+            </button>
 
-    };
+            <button
+                class="secondary-btn"
+                onclick="showBooks()">
 
-    app.appendChild(again);
+                Главное меню
 
-    // -------------------------
+            </button>
 
-    const home=document.createElement("button");
+        </div>
 
-    home.style.marginLeft="10px";
+        </div>
 
-    home.innerHTML="Главное меню";
+    `;
 
-    home.onclick=function(){
-
-        showBooks();
-
-    };
-
-    app.appendChild(home);
+    app.innerHTML = html;
 
 }

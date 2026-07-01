@@ -1,16 +1,16 @@
 // =========================================
 // NUR Test Engine
 // quiz.js
-// Версия 2.0
+// UI Version 3
 // =========================================
 
 // =========================================
 // Показ вопроса
 // =========================================
 
-function showQuestion(){
+function showQuestion() {
 
-    if(!hasNextQuestion()){
+    if (!hasNextQuestion()) {
 
         showResult();
 
@@ -20,31 +20,111 @@ function showQuestion(){
 
     const question = getQuestion();
 
+    const progress = Math.round(
+        (Engine.index / Engine.questions.length) * 100
+    );
+
     app.innerHTML = `
-        <h3>Вопрос ${Engine.index + 1}/${Engine.questions.length}</h3>
 
-        <h2>${question.q}</h2>
+        <div class="topbar">
 
-        <div id="o"></div>
+            <button
+                class="back-btn"
+                onclick="showStart()">
+
+                ←
+
+            </button>
+
+            <div class="topbar-title">
+
+                Тест
+
+            </div>
+
+        </div>
+
+        <div class="progress-card">
+
+            <div>
+
+                Вопрос
+                ${Engine.index + 1}
+                из
+                ${Engine.questions.length}
+
+            </div>
+
+            <div class="progress">
+
+                <div
+                    class="progress-bar"
+                    style="width:${progress}%">
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="question-card">
+
+            <div class="question-text">
+
+                ${question.q}
+
+            </div>
+
+        </div>
+
+        <div
+            id="answers"
+            class="answers">
+
+        </div>
+
     `;
 
-    let container = document.getElementById("o");
+    const container =
+        document.getElementById("answers");
 
-    question.a.forEach(answer=>{
+    const letters =
+        ["A","B","C","D","E","F"];
 
-        let d = document.createElement("div");
+    question.a.forEach((answerText,index)=>{
 
-        d.className = "o";
+        let card =
+            document.createElement("div");
 
-        d.textContent = answer;
+        card.className =
+            "answer";
 
-        d.onclick = function(){
+        card.innerHTML = `
 
-            checkAnswer(d,answer);
+            <div class="answer-letter">
+
+                ${letters[index]}
+
+            </div>
+
+            <div class="answer-text">
+
+                ${answerText}
+
+            </div>
+
+        `;
+
+        card.onclick = function(){
+
+            checkAnswer(
+                card,
+                answerText
+            );
 
         };
 
-        container.appendChild(d);
+        container.appendChild(card);
 
     });
 
@@ -53,47 +133,58 @@ function showQuestion(){
 // =========================================
 // Проверка ответа
 // =========================================
-
-function checkAnswer(element,userAnswer){
+function checkAnswer(element, userAnswer) {
 
     const result = answer(userAnswer);
 
     document
-        .querySelectorAll(".o")
-        .forEach(x=>x.onclick=null);
+        .querySelectorAll(".answer")
+        .forEach(card => {
 
-    if(result.correct){
+            card.onclick = null;
 
-        element.classList.add("good");
+        });
 
-        setTimeout(function(){
+    if (result.correct) {
+
+        element.classList.add("selected");
+
+        element.style.background = "#E8F7EF";
+        element.style.borderColor = "#16A34A";
+
+        setTimeout(function () {
 
             showQuestion();
 
-        },700);
+        }, 700);
 
     }
-    else{
+    else {
 
-        element.classList.add("bad");
+        element.style.background = "#FDECEC";
+        element.style.borderColor = "#DC2626";
 
         document
-            .querySelectorAll(".o")
-            .forEach(card=>{
+            .querySelectorAll(".answer")
+            .forEach(card => {
 
-                if(card.textContent===result.answer){
+                const text =
+                    card.querySelector(".answer-text").textContent;
 
-                    card.classList.add("good");
+                if (text === result.answer) {
+
+                    card.style.background = "#E8F7EF";
+                    card.style.borderColor = "#16A34A";
 
                 }
 
             });
 
-        setTimeout(function(){
+        setTimeout(function () {
 
             showQuestion();
 
-        },2000);
+        }, 1800);
 
     }
 

@@ -1,7 +1,7 @@
 // =========================================
 // NUR Test Engine
 // menu.js
-// Версия 1.0
+// UI Version 2
 // =========================================
 
 const app = document.getElementById("app");
@@ -10,90 +10,144 @@ const app = document.getElementById("app");
 // Главное меню
 // =========================================
 
-function showBooks(){
-
-    app.innerHTML = "<h1>Выберите книгу</h1>";
+function showBooks() {
 
     const books = getBooks();
 
-    books.forEach((book,index)=>{
+    let html = `
+        <div class="hero fade">
 
-        let card = document.createElement("div");
+            <div class="hero-logo">📖</div>
 
-        card.className = "o";
+            <h1>NUR Test Engine</h1>
 
-        card.style.cursor = "pointer";
+            <p>
+                Проверка знаний по исламским дисциплинам
+            </p>
 
-        card.innerHTML =
-            "<b>📖 " +
-            book.title +
-            "</b>";
+        </div>
 
-        card.onclick = function(){
+        <div class="book-list">
+    `;
 
-            showChapters(index);
+    books.forEach((book, index) => {
 
-        };
+        html += `
 
-        app.appendChild(card);
+            <div class="book-card"
+                 onclick="showChapters(${index})">
+
+                <div class="book-icon">
+
+                    📚
+
+                </div>
+
+                <div class="book-info">
+
+                    <div class="book-title">
+
+                        ${book.title}
+
+                    </div>
+
+                    <div class="book-description">
+
+                        ${book.chapters.length} глав
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
 
     });
+
+    html += `</div>`;
+
+    app.innerHTML = html;
 
 }
 
 // =========================================
-// Список глав
+// Главы
 // =========================================
 
-function showChapters(bookIndex){
+function showChapters(bookIndex) {
 
     Engine.currentBook = bookIndex;
 
-    app.innerHTML =
-        "<h1>" +
-        Engine.books[bookIndex].title +
-        "</h1>";
+    const book = Engine.books[bookIndex];
 
-    const chapters =
-        getChapters(bookIndex);
+    let html = `
 
-    chapters.forEach((chapter,index)=>{
+        <div class="topbar">
 
-        let card =
-            document.createElement("div");
+            <button
+                class="back-btn"
+                onclick="showBooks()">
 
-        card.className = "o";
+                ←
 
-        card.style.cursor = "pointer";
+            </button>
 
-        card.style.marginBottom = "12px";
+            <div class="topbar-title">
 
-        card.innerHTML =
-            "📘 " +
-            chapter.title;
+                ${book.title}
 
-        card.onclick = function(){
+            </div>
 
-            loadChapter(bookIndex,index);
+        </div>
 
-            showStart();
+        <div class="chapter-list">
 
-        };
+    `;
 
-        app.appendChild(card);
+    book.chapters.forEach((chapter, index) => {
+
+        html += `
+
+            <div class="chapter-card"
+
+                 onclick="loadChapter(${bookIndex},${index});showStart();">
+
+                <div class="chapter-left">
+
+                    <div class="chapter-number">
+
+                        ${index + 1}
+
+                    </div>
+
+                    <div class="chapter-title">
+
+                        ${chapter.title}
+
+                    </div>
+
+                </div>
+
+                <div class="chapter-arrow">
+
+                    →
+
+                </div>
+
+            </div>
+
+        `;
 
     });
 
-    let back =
-        document.createElement("button");
+    html += `
 
-    back.innerHTML =
-        "← Назад";
+        </div>
 
-    back.onclick =
-        showBooks;
+    `;
 
-    app.appendChild(back);
+    app.innerHTML = html;
 
 }
 
@@ -101,44 +155,75 @@ function showChapters(bookIndex){
 // Экран перед стартом
 // =========================================
 
-function showStart(){
+function showStart() {
 
     const book =
-        Engine.books[
-            Engine.currentBook
-        ];
+        Engine.books[Engine.currentBook];
 
     const chapter =
-        book.chapters[
-            Engine.currentChapter
-        ];
+        book.chapters[Engine.currentChapter];
+            app.innerHTML = `
 
-    app.innerHTML = `
+        <div class="topbar">
 
-        <h1>${book.title}</h1>
+            <button
+                class="back-btn"
+                onclick="showChapters(${Engine.currentBook})">
 
-        <h2>${chapter.title}</h2>
+                ←
 
-        <p>
+            </button>
 
-            Вопросов:
-            ${chapter.questions.length}
+            <div class="topbar-title">
 
-        </p>
+                ${book.title}
 
-        <button id="startButton">
+            </div>
 
-            Начать тест
+        </div>
 
-        </button>
+        <div class="info-card fade">
 
-        <br><br>
+            <h2>
 
-        <button id="backButton">
+                ${chapter.title}
 
-            ← К главам
+            </h2>
 
-        </button>
+            <p>
+
+                Перед началом теста убедитесь,
+                что готовы ответить на все вопросы.
+
+            </p>
+
+            <div class="question-count">
+
+                📋 ${chapter.questions.length} вопросов
+
+            </div>
+
+            <div class="button-group">
+
+                <button
+                    id="startButton"
+                    class="primary-btn">
+
+                    Начать тест
+
+                </button>
+
+                <button
+                    id="backButton"
+                    class="secondary-btn">
+
+                    ← Вернуться к главам
+
+                </button>
+
+            </div>
+
+        </div>
 
     `;
 
