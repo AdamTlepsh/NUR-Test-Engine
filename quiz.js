@@ -10,6 +10,8 @@
 
 function showQuestion() {
 
+    app.className = "quiz-mode";
+
     if (!hasNextQuestion()) {
 
         showResult();
@@ -26,11 +28,13 @@ function showQuestion() {
 
     app.innerHTML = `
 
+        ${appHeader("home")}
+
         <div class="topbar">
 
             <button
                 class="back-btn"
-                onclick="showStart()">
+                onclick="showChapter(Engine.currentChapter)">
 
                 ←
 
@@ -38,7 +42,7 @@ function showQuestion() {
 
             <div class="topbar-title">
 
-                Тест
+                Вопрос ${Engine.index + 1} из ${Engine.questions.length}
 
             </div>
 
@@ -48,10 +52,7 @@ function showQuestion() {
 
             <div>
 
-                Вопрос
-                ${Engine.index + 1}
-                из
-                ${Engine.questions.length}
+                Прогресс теста
 
             </div>
 
@@ -67,7 +68,7 @@ function showQuestion() {
 
         </div>
 
-        <div class="question-card">
+        <div class="question-card fade">
 
             <div class="question-text">
 
@@ -114,6 +115,7 @@ function showQuestion() {
             </div>
 
         `;
+        card.dataset.answer = answerText;
 
         card.onclick = function(){
 
@@ -137,17 +139,16 @@ function checkAnswer(element, userAnswer) {
 
     const result = answer(userAnswer);
 
-    document
-        .querySelectorAll(".answer")
-        .forEach(card => {
+    const cards = document.querySelectorAll(".answer");
 
-            card.onclick = null;
+    // отключаем повторный выбор
+    cards.forEach(card => {
 
-        });
+        card.onclick = null;
+
+    });
 
     if (result.correct) {
-
-        element.classList.add("selected");
 
         element.style.background = "#E8F7EF";
         element.style.borderColor = "#16A34A";
@@ -158,34 +159,33 @@ function checkAnswer(element, userAnswer) {
 
         }, 700);
 
-    }
-    else {
-
-        element.style.background = "#FDECEC";
-        element.style.borderColor = "#DC2626";
-
-        document
-            .querySelectorAll(".answer")
-            .forEach(card => {
-
-                const text =
-                    card.querySelector(".answer-text").textContent;
-
-                if (text === result.answer) {
-
-                    card.style.background = "#E8F7EF";
-                    card.style.borderColor = "#16A34A";
-
-                }
-
-            });
-
-        setTimeout(function () {
-
-            showQuestion();
-
-        }, 1800);
+        return;
 
     }
+
+    // выбранный неправильный
+    element.style.background = "#FDECEC";
+    element.style.borderColor = "#DC2626";
+
+    // подсвечиваем правильный
+    cards.forEach(card => {
+
+        const answerText = card.dataset.answer ||
+            card.querySelector(".answer-text").textContent.trim();
+
+        if (answerText === result.answer) {
+
+            card.style.background = "#E8F7EF";
+            card.style.borderColor = "#16A34A";
+
+        }
+
+    });
+
+    setTimeout(function () {
+
+        showQuestion();
+
+    }, 1800);
 
 }

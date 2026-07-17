@@ -1,14 +1,32 @@
 // =========================================
 // NUR Test Engine
 // result.js
-// UI Version 2
+// Version 3
 // =========================================
 
-function showResult() {
+function showResult(){
+
+    app.className = "result-mode";
 
     const result = getResult();
 
+    const chapter =
+
+        Engine.books[
+            Engine.currentBook
+        ].chapters[
+            Engine.currentChapter
+        ];
+
+    const level =
+
+        chapter.levels[
+            Engine.currentLevel
+        ];
+
     let html = `
+
+        ${appHeader("home")}
 
         <div class="result-card fade">
 
@@ -38,19 +56,19 @@ function showResult() {
 
     `;
 
-    if (result.errors.length === 0) {
+    if(result.errors.length===0){
 
         html += `
 
             <p class="mt-20">
 
-                🎉 Поздравляем! Все ответы правильные.
+                🎉 Все ответы правильные!
 
             </p>
 
         `;
 
-    } else {
+    }else{
 
         html += `
 
@@ -64,7 +82,7 @@ function showResult() {
 
         `;
 
-        result.errors.forEach(error => {
+        result.errors.forEach(error=>{
 
             html += `
 
@@ -72,19 +90,22 @@ function showResult() {
 
                     <div>
 
-                        <div style="font-weight:700;margin-bottom:12px;">
+                        <div
+                            style="font-weight:700;margin-bottom:12px;">
 
                             ${error.question}
 
                         </div>
 
-                        <div style="color:#DC2626;margin-bottom:8px;">
+                        <div
+                            style="color:#DC2626;margin-bottom:8px;">
 
                             ❌ ${error.user}
 
                         </div>
 
-                        <div style="color:#16A34A;">
+                        <div
+                            style="color:#16A34A;">
 
                             ✅ ${error.correct}
 
@@ -111,22 +132,34 @@ function showResult() {
         <div class="button-group">
 
             <button
-                class="primary-btn"
-                onclick="showStart()">
 
-                Пройти ещё раз
+                class="primary-btn"
+
+                onclick="startQuiz();showQuestion();">
+
+                🔄 Повторить тест
 
             </button>
 
             <button
-                class="secondary-btn"
-                onclick="showBooks()">
 
-                Главное меню
+                class="secondary-btn"
+
+                onclick="showChapter(Engine.currentChapter)">
+
+                ← К учебному блоку
 
             </button>
 
-        </div>
+            <button
+
+                class="secondary-btn"
+
+                onclick="showBooks()">
+
+                🏠 Главное меню
+
+            </button>
 
         </div>
 

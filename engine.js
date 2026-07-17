@@ -1,7 +1,7 @@
 // =========================================
 // NUR Test Engine
 // engine.js
-// Версия 1.0
+// Версия 2.0
 // =========================================
 
 const Engine = {
@@ -11,6 +11,8 @@ const Engine = {
     currentBook: null,
 
     currentChapter: null,
+
+    currentLevel: null,
 
     currentQuestion: null,
 
@@ -57,18 +59,33 @@ function getChapters(bookIndex){
 }
 
 // =========================================
-// Загрузить главу
+// Получить уровни главы
 // =========================================
 
-function loadChapter(bookIndex, chapterIndex){
+function getLevels(bookIndex, chapterIndex){
+
+    return Engine.books[bookIndex]
+        .chapters[chapterIndex]
+        .levels;
+
+}
+
+// =========================================
+// Загрузить уровень
+// =========================================
+
+function loadLevel(bookIndex, chapterIndex, levelIndex){
 
     Engine.currentBook = bookIndex;
 
     Engine.currentChapter = chapterIndex;
 
+    Engine.currentLevel = levelIndex;
+
     Engine.questions =
         Engine.books[bookIndex]
         .chapters[chapterIndex]
+        .levels[levelIndex]
         .questions;
 
 }
@@ -101,7 +118,7 @@ function startQuiz(){
 
     Engine.order = [];
 
-    for(let i=0;i<Engine.questions.length;i++){
+    for(let i = 0; i < Engine.questions.length; i++){
 
         Engine.order.push(i);
 
@@ -147,7 +164,7 @@ function getQuestion(){
 
     Engine.currentQuestion = question;
 
-    return {
+    return{
 
         q : question.q,
 
@@ -208,7 +225,7 @@ function answer(userAnswer){
 
     Engine.index++;
 
-    return {
+    return{
 
         correct : ok,
 
@@ -224,7 +241,7 @@ function answer(userAnswer){
 
 function getResult(){
 
-    return {
+    return{
 
         total :
 
@@ -242,7 +259,7 @@ function getResult(){
 
                 Engine.questions.length
 
-                *100
+                * 100
 
             ),
 
