@@ -12,7 +12,19 @@ registerBook({
 
     chapters: [
 
-        CHAPTER_TAHARA
+        CHAPTER_TAHARA,
+
+        CHAPTER_SALAH,
+
+        CHAPTER_FUNERALS,
+
+        CHAPTER_FASTING,
+
+        CHAPTER_ZAKAT,
+
+        CHAPTER_HAJJ,
+
+        CHAPTER_QURBAN
 
     ]
 

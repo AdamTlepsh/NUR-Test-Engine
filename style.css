@@ -959,6 +959,20 @@ button:disabled{
 
 }
 
+.theory-text h5{
+
+    margin:24px 0 10px;
+
+    color:var(--primary);
+
+    font-size:1.02rem;
+
+    line-height:1.35;
+
+    text-align:left;
+
+}
+
 .theory-text p{
 
     margin:12px 0 0;
@@ -2632,7 +2646,8 @@ body.dark-theme .bookmark-btn{
 }
 
 body.dark-theme .theory-text h3,
-body.dark-theme .theory-text h4{
+body.dark-theme .theory-text h4,
+body.dark-theme .theory-text h5{
 
     color:#FFFFFF;
 
