@@ -966,9 +966,7 @@ function showChapter(chapterIndex){
                 </h1>
 
                 <p>
-                    Изучите правила очищения: виды воды,
-                    малое и полное омовение, таяммум
-                    и связанные вопросы.
+                    ${chapter.description}
                 </p>
 
                 <button
